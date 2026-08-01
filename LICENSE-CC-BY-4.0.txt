@@ -1,0 +1,41 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Pebblous Inc.
+
+이 라이선스는 이 저장소의 `docs/` 아래 문서와 README.md, NOTICE.md에 적용된다.
+`plugin/` 아래의 스킬 파일과 설정 파일은 MIT 라이선스를 따른다. LICENSE 참조.
+
+---
+
+전문(법적 효력을 갖는 원문):
+https://creativecommons.org/licenses/by/4.0/legalcode
+
+요약(법적 효력 없음, 이해를 돕기 위한 것):
+https://creativecommons.org/licenses/by/4.0/deed.ko
+
+---
+
+허용되는 것
+
+  공유 — 어떤 매체나 형식으로도 복제하고 재배포할 수 있다.
+  변경 — 리믹스하고, 변형하고, 2차적 저작물을 만들 수 있다.
+          상업적 목적을 포함해 어떤 목적으로도 가능하다.
+
+  라이선스 제공자는 위 조건을 지키는 한 이 허락을 철회할 수 없다.
+
+지켜야 할 조건
+
+  저작자 표시 — 적절한 출처를 밝히고, 라이선스 링크를 제공하며,
+                변경이 있었다면 변경했다는 사실을 밝혀야 한다.
+                합리적인 방식이면 되지만, 라이선스 제공자가 이용자나
+                이용 방식을 보증한다는 인상을 주어서는 안 된다.
+
+  추가 제한 금지 — 이 라이선스가 허용하는 행위를 법적 수단이나
+                  기술적 조치로 제한해서는 안 된다.
+
+---
+
+출처 표시 예시
+
+  한국어 기술 산문 작성 표준 (Pebblous Inc.), CC BY 4.0
+  https://github.com/pebblous/korean-tech-writing

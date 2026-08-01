@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "korean-tech-writing",
+  "version": "0.1.0",
+  "description": "한국어 기술 산문의 어조·제목·문체를 다루는 세 스킬. 생성형 모델이 쓴 글의 문체 흔적 11종을 진단·교정하고, 어조를 골라 다시 쓰고, 제목 세 자리를 점검한다.",
+  "author": {
+    "name": "Pebblous Inc."
+  },
+  "homepage": "https://github.com/pebblous/korean-tech-writing",
+  "license": "MIT",
+  "keywords": [
+    "korean",
+    "writing",
+    "prose",
+    "style-guide",
+    "ai-detection"
+  ],
+  "skills": [
+    "./skills/ko-prose-humanizer",
+    "./skills/ko-voice",
+    "./skills/ko-title"
+  ]
+}
