@@ -37,7 +37,7 @@
 
 ## 스킬 플러그인 설치
 
-Claude Code에서 아래 두 줄을 실행하면 세 스킬이 `.claude/skills/`에 들어온다.
+Claude Code에서 아래 두 줄을 실행하면 세 스킬이 들어온다.
 
 ```bash
 claude plugin marketplace add pebblous/korean-tech-writing
@@ -48,7 +48,34 @@ claude plugin install korean-tech-writing@korean-tech-writing
 ```
 
 Claude Code 안에서는 `/plugin marketplace add pebblous/korean-tech-writing` 으로도 같은 일을 할 수 있다.
-설치 뒤 새 세션부터 아래 세 스킬이 잡힌다.
+설치 뒤 새 세션부터 세 스킬이 잡힌다. 지금 바로 쓰려면 `/reload-plugins`를 실행한다.
+
+제대로 들어왔는지 확인한다.
+
+```bash
+claude plugin list
+```
+
+### 어디에 설치되는가
+
+스킬 파일이 작업 중인 저장소 안으로 복사되는 것이 아니다. 실제 파일은
+`~/.claude/plugins/` 아래에 받아지고, 설정 파일에는 어느 마켓플레이스를 알고 있고 어느 플러그인을
+켰는지만 기록된다. `.claude/skills/`를 열어 봐도 아무것도 없는 것이 정상이다.
+
+설치 범위는 세 가지 중에 고른다.
+
+| 범위 | 지정 | 기록되는 곳 |
+|---|---|---|
+| user (기본값) | 생략 | 사용자 설정. 내 모든 저장소에서 쓴다 |
+| project | `--scope project` | 저장소의 `.claude/settings.json`. 커밋해서 팀과 공유한다 |
+| local | `--scope local` | 저장소의 로컬 설정. 나만 이 저장소에서 쓴다 |
+
+**`project` 범위로 설치해 설정 파일을 커밋해도 팀원이 설치 단계를 건너뛰지는 못한다.**
+그 파일은 이 저장소가 어느 플러그인을 쓰기로 했는지를 기록할 뿐이고, 실제 내려받기는
+각자의 컴퓨터에서 일어난다. 팀원도 위의 두 줄을 그대로 실행해야 한다.
+설정 파일을 커밋하는 값은 **무엇을 쓰기로 했는지가 저장소에 남는다**는 데 있다.
+
+### 들어오는 세 스킬
 
 | 스킬 | 하는 일 | 언제 부르나 |
 |---|---|---|
