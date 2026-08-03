@@ -86,57 +86,43 @@ argument-hint: "[대상 파일 경로] [--report-only|--apply] [--threshold=0.3]
 
 ## 2단계 — 자동 검출
 
-진단을 빠르게 시작하려면 먼저 기계적으로 1차 신호를 잡는다.
-
-### 한국어
+이 스킬에 딸린 `measure.py`를 돌려 1차 신호를 잡는다.
 
 ```bash
-FILE="<대상 파일 경로>"
-
-# T1 줄표 빈도 — 500자당 1개 이하 권장, 300자당 1개 이상이면 교정
-python3 - "$FILE" << 'EOF'
-import re, sys
-t = open(sys.argv[1], encoding='utf-8').read()
-t = re.sub(r'<script[^>]*>.*?</script>', '', t, flags=re.DOTALL)
-t = re.sub(r'<style[^>]*>.*?</style>', '', t, flags=re.DOTALL)
-t = re.sub(r'<meta[^>]*>', '', t)
-text = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', t))
-n, c = text.count('—'), len(text)
-print(f"본문 {c}자, 줄표 {n}개, {c // max(n, 1)}자당 1개")
-EOF
-
-# T2 명사형 종결
-grep -cE "이다\.|점이다\.|사실이다\.|것이다\." "$FILE"
-
-# T3 "한 X" 반복 — 3회 초과면 신호
-for kw in "한 줄" "한 문장" "한 자리" "한 좌표" "한 가지" "한 화면"; do
-  c=$(grep -c "$kw" "$FILE"); [ "$c" -gt 3 ] && echo "  $kw: $c"
-done
-
-# T4 메타 예고문 — 0이어야 한다
-for kw in "옮긴다" "풀어 쓰자면" "짚어 본다" "묶어 본다" "한 발 더 들어가면" "다시 읽어 본다" "다음 표가" "한눈에 본다" "또렷해진다"; do
-  c=$(grep -c "$kw" "$FILE"); [ "$c" -gt 0 ] && echo "  $kw: $c"
-done
-
-# T7 번역투
-for kw in "에 있어서" "을 부른다" "라는 진단이다" "을 가능하게 한다" "되어진" "된 것이다"; do
-  c=$(grep -c "$kw" "$FILE"); [ "$c" -gt 0 ] && echo "  $kw: $c"
-done
-
-# 어조 층위와 겹치는 항목 — 모두 0이어야 한다
-echo "논문체:"; grep -cE "본 보고서|규명한다|분석하고자|살펴본다|고찰한다" "$FILE"
-echo "광고체:"; grep -cE "혁신적|획기적|놀라운|차세대|게임 체인저" "$FILE"
-echo "접속부사:"; grep -cE "흥미롭게도|주목할 만한|결론적으로|이러한 맥락에서" "$FILE"
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/ko-prose-humanizer/measure.py" <대상 파일>
 ```
 
-### 영어
+짧은 글(소개글, 소셜 미디어)이면 `--short`를 붙인다. 좁은 임계값을 쓴다.
 
 ```bash
-for kw in "delve" "moreover" "furthermore" "crucial" "paradigm shift" "underscore" \
-          "leverage" "stands as a testament" "in the realm of" "It is worth noting"; do
-  c=$(grep -ci "$kw" "$FILE"); [ "$c" -gt 0 ] && echo "  $kw: $c"
-done
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/ko-prose-humanizer/measure.py" <대상 파일> --short
 ```
+
+마크다운과 HTML을 모두 받는다. T1 줄표 빈도, T2 명사형 종결, T3 반복 표현, T4 메타 예고문,
+T7 번역투와 논문체, 광고체, 접속부사, 영어 상투구를 한 번에 낸다.
+
+### 왜 grep을 직접 쓰지 않는가
+
+**제목과 표와 코드와 인용을 빼고 세어야 하기 때문이다.**
+
+소제목에는 "어조 — 세 결" 같은 줄표가 정상적으로 들어간다. 나쁜 예를 인용한 대목에도 줄표가
+들어간다. 이것을 본문과 함께 세면 재진술이 하나도 없는 글이 교정 대상으로 잡힌다.
+실제로 이 저장소의 문서 하나가 그렇게 잘못 잡혔다. 줄표 열세 개가 전부 소제목과 인용이었는데
+274자당 1개로 계산돼 교정 대상이 됐다.
+
+`measure.py`는 다음을 빼고 잰다.
+
+| 형식 | 빼는 것 |
+|---|---|
+| 마크다운 | 머리말, 제목 줄, 표 줄, 인용 블록, 코드 블록, 볼드만 있는 줄 |
+| HTML | `h1`부터 `h6`, `table`, `pre`, `code`, `blockquote`, `figcaption`, `script`, `style`, 주석 |
+
+grep으로 급히 볼 때도 같은 원칙을 지킨다. 제목 줄이 섞인 채로 센 숫자는 믿지 않는다.
+
+### 기계로 세지 않는 것
+
+T5, T6, T8, T9, T10, T11은 세지 않는다. 문맥을 봐야 판정되기 때문이다.
+`measure.py`가 내는 숫자는 시작점일 뿐이고, 판정은 증거 문구를 직접 읽고 내린다.
 
 ### 기준 글과 비교한다
 
